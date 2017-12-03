@@ -9,7 +9,6 @@
     "fluent-ffmpeg": "^2.1.2",
     "opus": "0.0.0",
     "opusscript": "0.0.4",
-    "youtube-audio-stream": "0.0.50",
     "ytdl-core": "^0.18.3"
   },
   "devDependencies": {},

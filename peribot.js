@@ -1,17 +1,20 @@
+//Imports
 const Discord = require("discord.js");
 const commands = require("./commands");
 const YoutubeStream = require("ytdl-core");
-const peribot = new Discord.Client();
 
+//Nouvelle instance du bot
+const peribot = new Discord.Client();
+//Nombre de phrases prononcées par le bot depuis son lancement
 var i;
 //Confidentiel : Token privé du bot
 peribot.login("Mzg2NjE2MTgyOTgxMTMyMzA5.DQSjdA.zX5MbzCL0ToZN06v9Fei9MHisWg");
 
-//Fonction appelée quand le bot est correctement initialisé
+//Fonction appelée une fois que le bot est correctement initialisé
 peribot.on("ready", function()
 {
     console.log("Peribot démarré, bip boup");
-    peribot.user.setGame("java.lang.NullPointerException");
+    peribot.user.setGame("C L O D S. E X E");
     i = 0;
 
 });
@@ -30,33 +33,34 @@ function match(message)
 //Prend un message destiné à Peribot en paramètre et effectue la commande correspondante
 function execute(message)
 {
-    if(message.content === "$ping")
+    if(message.content.startsWith("$play"))
     {
-        commands.ping(peribot, message);
-    }
-    else if(message.content === "$help")
-    {
-        i = commands.help(message, i);
-        i++;
-    }
-    else if(message.content === "$ghelp")
-    {
-        i = commands.ghelp(message, i);
-        i++;
-    }
-    else if(message.content === "$hi")
-    {
-        i = commands.hi(message, i);
-        i++;
-    }
-    else if(message.content.startsWith("$play"))
-    {
-        commands.play(message, i, YoutubeStream);
+        i = commands.play(message, i, YoutubeStream);
         i++;
     }
     else
     {
-        i = commands.unknown(message, i);
+        switch (message.content) 
+        {
+            case "$ping":
+                i = commands.ping(peribot, message, i);
+                break;
+            case "$help":
+                i = commands.help(message, i);
+                break;
+            case "$ghelp":
+                i = commands.ghelp(message, i);
+                break;
+            case "$hi":
+                i = commands.hi(message, i);
+                break;
+            case "$stop":
+                i = commands.stop(message, i, peribot);
+                break;
+            default:
+                i = commands.unknown(message, i);
+                break;
+        }
         i++;
     }
 }
