@@ -1,7 +1,9 @@
 const Discord = require("discord.js");
 const commands = require("./commands");
+const YoutubeStream = require("ytdl-core");
 const peribot = new Discord.Client();
 
+var i;
 //Confidentiel : Token privé du bot
 peribot.login("Mzg2NjE2MTgyOTgxMTMyMzA5.DQSjdA.zX5MbzCL0ToZN06v9Fei9MHisWg");
 
@@ -10,6 +12,7 @@ peribot.on("ready", function()
 {
     console.log("Peribot démarré, bip boup");
     peribot.user.setGame("java.lang.NullPointerException");
+    i = 0;
 
 });
 //Fonction appelée lors d'un message dans le chat
@@ -33,10 +36,27 @@ function execute(message)
     }
     else if(message.content === "$help")
     {
-        commands.help(message);
+        i = commands.help(message, i);
+        i++;
+    }
+    else if(message.content === "$ghelp")
+    {
+        i = commands.ghelp(message, i);
+        i++;
+    }
+    else if(message.content === "$hi")
+    {
+        i = commands.hi(message, i);
+        i++;
+    }
+    else if(message.content.startsWith("$play"))
+    {
+        commands.play(message, i, YoutubeStream);
+        i++;
     }
     else
     {
-        commands.unknown(message);
+        i = commands.unknown(message, i);
+        i++;
     }
 }
