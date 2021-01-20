@@ -1,7 +1,6 @@
 //Imports
 const Discord = require("discord.js");
 const commands = require("./commands");
-const YoutubeStream = require("ytdl-core");
 
 //Nouvelle instance du bot
 const peribot = new Discord.Client();
@@ -14,7 +13,7 @@ peribot.login("Mzg2NjE2MTgyOTgxMTMyMzA5.DQSjdA.zX5MbzCL0ToZN06v9Fei9MHisWg");
 peribot.on("ready", function()
 {
     console.log("Peribot démarré, bip boup");
-    peribot.user.setGame("C L O D S. E X E");
+    peribot.user.setStatus("C L O D S. E X E");
     i = 0;
 
 });
@@ -35,7 +34,7 @@ function execute(message)
 {
     if(message.content.startsWith("$play"))
     {
-        i = commands.play(message, i, YoutubeStream);
+        i = commands.play(message, i, peribot);
         i++;
     }
     else
@@ -43,22 +42,27 @@ function execute(message)
         switch (message.content) 
         {
             case "$ping":
-                i = commands.ping(peribot, message, i);
+                i = commands.ping(message);
                 break;
             case "$help":
-                i = commands.help(message, i);
+                i = commands.help(message);
                 break;
             case "$ghelp":
                 i = commands.ghelp(message, i);
                 break;
             case "$hi":
-                i = commands.hi(message, i);
+                i = commands.hi(message);
                 break;
             case "$stop":
                 i = commands.stop(message, i, peribot);
                 break;
+            case "$disconnect":
+                i = commands.disconnect(message);
+                break;
+            case "$aled":
+                commands.chingchong(message);
             default:
-                i = commands.unknown(message, i);
+                i = commands.unknown(message);
                 break;
         }
         i++;
