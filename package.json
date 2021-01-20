@@ -4,12 +4,12 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "discord.js": "^11.2.1",
+    "discord.js": "^12.5.1",
     "ffmpeg": "0.0.4",
     "fluent-ffmpeg": "^2.1.2",
     "opus": "0.0.0",
     "opusscript": "0.0.4",
-    "ytdl-core": "^0.18.3"
+    "ytdl-core": "^4.4.4"
   },
   "devDependencies": {},
   "scripts": {
