@@ -1,13 +1,14 @@
 //Imports
 const Discord = require("discord.js");
 const commands = require("./commands");
+const _private = require("./_private");
 
 //Nouvelle instance du bot
 const peribot = new Discord.Client();
 //Nombre de phrases prononcées par le bot depuis son lancement
 var i;
 //Confidentiel : Token privé du bot
-peribot.login("Mzg2NjE2MTgyOTgxMTMyMzA5.DQSjdA.zX5MbzCL0ToZN06v9Fei9MHisWg");
+peribot.login(_private.token);
 
 //Fonction appelée une fois que le bot est correctement initialisé
 peribot.on("ready", function()
