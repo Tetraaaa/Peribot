@@ -35,7 +35,7 @@ function execute(message)
 {
     if(message.content.startsWith("$play"))
     {
-        i = commands.play(message, i, peribot);
+        i = commands.play(message);
         i++;
     }
     else

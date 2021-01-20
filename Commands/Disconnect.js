@@ -2,8 +2,9 @@ module.exports =  function Disconnect(message)
 {
     if(!Disconnect.i) Disconnect.i = 0;
 
-    message.member.voice.channel.leave();
+    
     message.channel.send(possibleQuotes[Disconnect.i%possibleQuotes.length]);
+    message.member.voice.channel.leave();
 
     Disconnect.i ++;
 }
