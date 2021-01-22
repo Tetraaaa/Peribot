@@ -1,3 +1,4 @@
+const Heal = require("./Commands/Heal");
 
 module.exports = class commands
 {
@@ -105,6 +106,11 @@ module.exports = class commands
     {
         const Disconnect = require("./Commands/Disconnect");
         Disconnect(message);
+    }
+
+    static heal(message)
+    {
+        Heal(message);
     }
 
 

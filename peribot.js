@@ -60,8 +60,9 @@ function execute(message)
             case "$disconnect":
                 i = commands.disconnect(message);
                 break;
-            case "$aled":
-                commands.chingchong(message);
+            case "$heal":
+                commands.heal(message);
+                break;
             default:
                 i = commands.unknown(message);
                 break;
