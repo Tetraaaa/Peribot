@@ -96,37 +96,37 @@ function playAudioSample(message, voiceChannel, i, url)
     switch(url)
     {
         case "chasseor":
-            audioFile = "chasseor.mp3"
+            audioFile = "Audio/chasseor.mp3"
             break;
         case "ohé":
-            audioFile = "ohé.mp3"
+            audioFile = "Audio/ohé.mp3"
             break;
         case "quefait":
-            audioFile = "quefait.mp3"
+            audioFile = "Audio/quefait.mp3"
             break;
         case "quefe":
-            audioFile = "quefe.mp3"
+            audioFile = "Audio/quefe.mp3"
             break;
         case "alabataille":
-            audioFile = "alabataille.mp3"
+            audioFile = "Audio/alabataille.mp3"
             break;
         case "bastissor":
-            audioFile = "bastissor.mp3"
+            audioFile = "Audio/bastissor.mp3"
             break;
         case "bonjoua":
-            audioFile = "bonjoua.mp3"
+            audioFile = "Audio/bonjoua.mp3"
             break;
         case "bucheron":
-            audioFile = "bucheron.mp3"
+            audioFile = "Audio/bucheron.mp3"
             break;
         case "paris":
-            audioFile = "paris.mp3"
+            audioFile = "Audio/paris.mp3"
             break;
         case "ching":
-            audioFile = "ching.mp3";
+            audioFile = "Audio/ching.mp3";
             break;
         case "chong":
-            audioFile = "chong.mp3";
+            audioFile = "Audio/chong.mp3";
             break;
         default:
             audioFile = null;
