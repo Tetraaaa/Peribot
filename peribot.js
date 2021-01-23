@@ -63,6 +63,9 @@ function execute(message)
             case "$heal":
                 commands.heal(message);
                 break;
+            case "$join":
+                commands.join(message);
+                break;
             default:
                 i = commands.unknown(message);
                 break;

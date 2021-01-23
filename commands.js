@@ -1,4 +1,5 @@
 const Heal = require("./Commands/Heal");
+const Join = require("./Commands/Join");
 
 module.exports = class commands
 {
@@ -111,6 +112,11 @@ module.exports = class commands
     static heal(message)
     {
         Heal(message);
+    }
+
+    static join(message)
+    {
+        Join(message);
     }
 
 
