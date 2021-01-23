@@ -141,4 +141,8 @@ function playAudioSample(message, voiceChannel, i, url)
             message.channel.send(possibleErrQuotes[i%possibleErrQuotes.length]);
         })
     }
+    else
+    {
+        message.channel.send(possibleErrQuotes[i%possibleErrQuotes.length]);
+    }
 }
