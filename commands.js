@@ -63,10 +63,10 @@ module.exports = class commands
     }
 
     //Peridot joue de la musique avec l'url youtube passée en paramètre
-    static play(message)
+    static play(message, linkOrAudioSample)
     {
         const Play = require("./Commands/Play");
-        Play(message);
+        Play(message, linkOrAudioSample);
     }
     //Peridot se déconnecte du serveur vocal et arrête de jouer la musique
     static stop(message, i, peribot)

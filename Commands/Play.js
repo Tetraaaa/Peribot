@@ -1,9 +1,9 @@
-module.exports = function Play(message)
+module.exports = function Play(message, linkOrAudioSample)
 {
     if(!Play.i) Play.i = 0;
 
     let voiceChannel = message.member.voice.channel;
-    let url = message.content.split(' ')[1];
+    let url = linkOrAudioSample;
 
     const possibleQuotes = 
     [

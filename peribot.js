@@ -33,43 +33,17 @@ function match(message)
 //Prend un message destiné à Peribot en paramètre et effectue la commande correspondante
 function execute(message)
 {
-    if(message.content.startsWith("$play"))
+    let splitMessage = message.content.split(" ");
+    let command = splitMessage[0].substring(1);
+    splitMessage.shift();
+    let args = splitMessage;
+    
+    if(typeof commands[command] === "function")
     {
-        i = commands.play(message);
-        i++;
+        commands[command](message, ...args)
     }
     else
     {
-        switch (message.content) 
-        {
-            case "$ping":
-                i = commands.ping(message);
-                break;
-            case "$help":
-                i = commands.help(message);
-                break;
-            case "$ghelp":
-                i = commands.ghelp(message, i);
-                break;
-            case "$hi":
-                i = commands.hi(message);
-                break;
-            case "$stop":
-                i = commands.stop(message, i, peribot);
-                break;
-            case "$disconnect":
-                i = commands.disconnect(message);
-                break;
-            case "$heal":
-                commands.heal(message);
-                break;
-            case "$join":
-                commands.join(message);
-                break;
-            default:
-                i = commands.unknown(message);
-                break;
-        }
-        i++;
+        commands.unknown(message);
     }
 }
