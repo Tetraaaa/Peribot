@@ -1,5 +1,6 @@
 const Heal = require("./Commands/Heal");
 const Join = require("./Commands/Join");
+const Lol = require("./Commands/Lol");
 
 module.exports = class commands
 {
@@ -117,6 +118,11 @@ module.exports = class commands
     static join(message)
     {
         Join(message);
+    }
+
+    static lol(message, player)
+    {
+        Lol(message, player);
     }
 
 

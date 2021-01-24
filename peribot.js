@@ -25,6 +25,7 @@ peribot.on("message", function(message)
 });
 
 
+
 //Prend un message en paramètre et vérifie si il est adressé à Peribot, si oui, appelle execute
 function match(message)
 {

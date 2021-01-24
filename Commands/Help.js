@@ -24,6 +24,9 @@ const commandes =
 + "$help : Sends you a private message with this list of commands you are reading right now, why are you even asking\n"
 + "$ghelp : Same as $help, but the message isn't private\n"
 + "$hi : Says hi to Peribot\n"
-+ "$play <youtube_url> : Peridot connects to your vocal channel and starts playing the audio from the url you typed.\n"
-+ "$stop : Peridots stops the music and disconnects from your channel.\n"
++ "$play <youtube_url|audioSample> : Peridot connects to your vocal channel and starts playing the audio from the url you typed.\n"
++ "$disconnect : Peridots stops the music and disconnects from your channel.\n"
++ "$join : Peridots joins your vocal channel.\n"
++ "$heal : Peridots comes and squeezes some fairy juice into your channel.\n"
++ "$lol <summoner> : Gets details about a League of Legends summoner.\n"
 + "\n```";
