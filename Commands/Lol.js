@@ -45,8 +45,9 @@ module.exports =  function Lol(message, joueur)
         .then(json => {
             if(json.length > 0)
             {
-                let firstQueue = json[0];
-                message.channel.send(generateRandomMessageFromTiers(firstQueue.tier, firstQueue.rank, firstQueue.wins, firstQueue.losses, summonerId, summonerLevel));
+                let queue = json.find(queue => queue.queueType === "RANKED_SOLO_5x5");
+                if(!queue)queue = json[0];
+                message.channel.send(generateRandomMessageFromTiers(queue.tier, queue.rank, queue.wins, queue.losses, summonerId, summonerLevel));
             }
             else
             {
