@@ -90,7 +90,6 @@ module.exports = class commands
             "It's okay, I'll just leave ! Have a great time, without me.",
             "Yeah, I didn't like the music either."
         ]
-        console.log(peribot.voice)
         if(peribot.voice.channel && message.member.voice.channel != null)
         {
             peribot.voice.channel.disconnect();
