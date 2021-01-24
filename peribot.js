@@ -34,10 +34,35 @@ function match(message)
 //Prend un message destiné à Peribot en paramètre et effectue la commande correspondante
 function execute(message)
 {
-    let splitMessage = message.content.split(" ");
-    let command = splitMessage[0].substring(1);
-    splitMessage.shift();
-    let args = splitMessage;
+    let text = message.content.substring(1);
+    let parsedCommand = "";
+
+    let currentlyInString = false;
+    [...text].forEach(character => {
+        if(character === " ")
+        {
+            if(currentlyInString)
+            {
+                parsedCommand = parsedCommand+=character;
+            }
+            else
+            {
+                parsedCommand = parsedCommand += "[argumentSeparator]";
+            }
+        }
+        else if(character === '"')
+        {
+            currentlyInString = !currentlyInString;
+        }
+        else
+        {
+            parsedCommand = parsedCommand+=character;
+        }
+    })
+
+    let args = parsedCommand.split("[argumentSeparator]");
+    let command = args[0];
+    args.shift();
     
     if(typeof commands[command] === "function")
     {
