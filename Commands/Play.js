@@ -128,6 +128,9 @@ function playAudioSample(message, voiceChannel, i, url)
         case "chong":
             audioFile = "Audio/chong.mp3";
             break;
+        case "ghast":
+            audioFile = "Audio/ghast" + (Math.floor(Math.random()*4)+1) + ".mp3";
+            break;
         default:
             audioFile = null;
             break;
