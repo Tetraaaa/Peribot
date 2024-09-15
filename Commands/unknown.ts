@@ -19,7 +19,7 @@ let possibleQuotes = (message: Message) => [
 const command: PeribotCommand = {
   execute: (message, dialogIndex) => {
     (message.channel as TextChannel).send(
-      possibleQuotes(message)[dialogIndex % possibleQuotes.length]
+      possibleQuotes(message)[dialogIndex % possibleQuotes(message).length]
     );
   },
 };
