@@ -1,5 +1,10 @@
-import { Message } from "discord.js";
+import { Client, Message } from "discord.js";
 
 export interface PeribotCommand {
-  execute: (message: Message, dialogIndex: number, ...args) => void;
+  execute: (
+    message: Message,
+    dialogIndex: number,
+    peribot: Client,
+    ...args
+  ) => void;
 }

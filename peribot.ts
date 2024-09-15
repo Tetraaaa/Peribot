@@ -73,9 +73,9 @@ function execute(message: Message) {
   args.shift();
 
   if (commands[command]) {
-    commands[command].execute(message, i, ...args);
+    commands[command].execute(message, i, peribot, ...args);
   } else {
-    commands.unknown.execute(message, i);
+    commands.unknown.execute(message, i, peribot);
   }
   i++;
 }
