@@ -1,3 +1,5 @@
+const { Message } = require('discord.js');
+
 module.exports = function Play(message, linkOrAudioSample)
 {
     if(!Play.i) Play.i = 0;

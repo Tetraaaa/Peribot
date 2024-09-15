@@ -1,10 +1,15 @@
 //Imports
-const Discord = require("discord.js");
+const {Client, GatewayIntentBits, Events} = require("discord.js");
 const commands = require("./commands");
 const _private = require("./_private");
 
 //Nouvelle instance du bot
-const peribot = new Discord.Client();
+const peribot = new Client({
+    intents: [
+        GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildVoiceStates
+    ]
+    
+});
 //Nombre de phrases prononcées par le bot depuis son lancement
 var i;
 //Confidentiel : Token privé du bot
@@ -19,7 +24,7 @@ peribot.on("ready", function()
 
 });
 //Fonction appelée lors d'un message dans le chat
-peribot.on("message", function(message)
+peribot.on(Events.MessageCreate, function(message)
 {
     match(message);
 });
