@@ -8,3 +8,8 @@ export interface PeribotCommand {
     ...args
   ) => void;
 }
+
+export interface SouvenirCacheData {
+  expiresAt: number;
+  item: Record<string, string[]>;
+}

@@ -1,6 +1,7 @@
 import { Message, TextChannel } from "discord.js";
 import { PeribotCommand } from "../types";
 import { getRandomArrayValue } from "../Tools/random";
+import { SouvenirCache } from "../Tools/cache";
 
 let possibleQuotes = (message: Message) => [
   "Hey hey hey ! Did you remember this ?",
@@ -8,13 +9,13 @@ let possibleQuotes = (message: Message) => [
   "Ta-da ! Does this bring back good old memories ? No ? Maybe decent ones at least ?",
   "I'm tidying up the place. Did you still need this ?",
   "Hello human, I'd like an explanation for this.",
+  "I just shattered spacetime to bring you this, I hope it was worth it.",
 ];
 
 const command: PeribotCommand = {
   execute: (message, dialogIndex) => {
-    getAllChannelMessagesWithAttachments(message.channel as TextChannel).then(
-      (messages) => {
-        let messagePicked = getRandomArrayValue(messages);
+    getRandomChannelMessageWithAttachment(message.channel as TextChannel).then(
+      (messagePicked) => {
         messagePicked.reply({
           content:
             possibleQuotes(message)[
@@ -28,10 +29,22 @@ const command: PeribotCommand = {
 };
 export default command;
 
+async function getRandomChannelMessageWithAttachment(channel: TextChannel) {
+  if (SouvenirCache.hit(channel.id)) {
+    const messageIdPicked = getRandomArrayValue(SouvenirCache.get(channel.id)!);
+    return channel.messages.fetch(messageIdPicked);
+  } else {
+    return getRandomArrayValue(
+      await getAllChannelMessagesWithAttachments(channel)
+    );
+  }
+}
+
 async function getAllChannelMessagesWithAttachments(
   channel: TextChannel
 ): Promise<Message[]> {
   const messagesWithAttachments: Message[] = [];
+
   let cycles = 0;
   let earliestMessageIdFetched: string | undefined = undefined;
   do {
@@ -47,7 +60,11 @@ async function getAllChannelMessagesWithAttachments(
 
     earliestMessageIdFetched = messages.at(messages.size - 1)!.id;
     cycles++;
-  } while (cycles < 100);
+  } while (cycles < 500);
 
+  SouvenirCache.set(
+    channel.id,
+    messagesWithAttachments.map((m) => m.id)
+  );
   return messagesWithAttachments;
 }

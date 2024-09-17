@@ -7,7 +7,6 @@ import {
   Message,
   PartialGroupDMChannel,
 } from "discord.js";
-import path from "node:path";
 import fs from "node:fs";
 import { PeribotCommand } from "./types";
 
