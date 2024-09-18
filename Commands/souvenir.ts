@@ -1,4 +1,4 @@
-import { Message, TextChannel } from "discord.js";
+import { Client, Message, TextChannel } from "discord.js";
 import { PeribotCommand } from "../types";
 import { getRandomArrayValue } from "../Tools/random";
 import { SouvenirCache } from "../Tools/cache";
@@ -13,35 +13,38 @@ let possibleQuotes = (message: Message) => [
 ];
 
 const command: PeribotCommand = {
-  execute: (message, dialogIndex) => {
-    getRandomChannelMessageWithAttachment(message.channel as TextChannel).then(
-      (messagePicked) => {
-        messagePicked.reply({
-          content:
-            possibleQuotes(message)[
-              dialogIndex % possibleQuotes(message).length
-            ],
-          files: [messagePicked.attachments.at(0)!],
-        });
-      }
-    );
+  execute: (message, dialogIndex, peribot) => {
+    getRandomChannelMessageWithAttachment(
+      message.channel as TextChannel,
+      peribot.user?.id || ""
+    ).then((messagePicked) => {
+      messagePicked.reply({
+        content:
+          possibleQuotes(message)[dialogIndex % possibleQuotes(message).length],
+        files: [messagePicked.attachments.at(0)!],
+      });
+    });
   },
 };
 export default command;
 
-async function getRandomChannelMessageWithAttachment(channel: TextChannel) {
+async function getRandomChannelMessageWithAttachment(
+  channel: TextChannel,
+  peribotId: string
+) {
   if (SouvenirCache.hit(channel.id)) {
     const messageIdPicked = getRandomArrayValue(SouvenirCache.get(channel.id)!);
     return channel.messages.fetch(messageIdPicked);
   } else {
     return getRandomArrayValue(
-      await getAllChannelMessagesWithAttachments(channel)
+      await getAllChannelMessagesWithAttachments(channel, peribotId)
     );
   }
 }
 
 export async function getAllChannelMessagesWithAttachments(
-  channel: TextChannel
+  channel: TextChannel,
+  peribotId: string
 ): Promise<Message[]> {
   const messagesWithAttachments: Message[] = [];
 
@@ -55,7 +58,8 @@ export async function getAllChannelMessagesWithAttachments(
     if (!messages.size) break;
 
     messages.forEach((message) => {
-      if (message.attachments.size) messagesWithAttachments.push(message);
+      if (message.attachments.size && message.author.id !== peribotId)
+        messagesWithAttachments.push(message);
     });
 
     earliestMessageIdFetched = messages.at(messages.size - 1)!.id;
