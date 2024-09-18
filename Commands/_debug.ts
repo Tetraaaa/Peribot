@@ -4,6 +4,7 @@ import CONFIG from "../config";
 import { getAllChannelMessagesWithAttachments } from "./souvenir";
 
 const command: PeribotCommand = {
+  description: "",
   allowedUsers: CONFIG.ADMINISTRATOR_IDS,
 
   execute: (message, dialogIndex, peribot, ...rest) => {

@@ -13,6 +13,7 @@ const possibleQuotes = (message: Message) => [
 ];
 
 const command: PeribotCommand = {
+  description: "Says hi to Peribot.",
   execute: (message, dialogIndex) => {
     (message.channel as TextChannel).send(
       possibleQuotes(message)[dialogIndex % possibleQuotes(message).length]

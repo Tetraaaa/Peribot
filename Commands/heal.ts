@@ -16,6 +16,9 @@ const possibleErrQuotes = [
 ];
 
 const command: PeribotCommand = {
+  description:
+    "Peridots comes and squeezes some fairy juice into your channel.",
+
   execute: (message, dialogIndex) => {
     const { guildId, guild, member } = message;
 

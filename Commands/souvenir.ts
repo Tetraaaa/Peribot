@@ -13,6 +13,8 @@ let possibleQuotes = (message: Message) => [
 ];
 
 const command: PeribotCommand = {
+  description:
+    "Peribot picks a random picture from this channel and reposts it.",
   execute: (message, dialogIndex, peribot) => {
     getRandomChannelMessageWithAttachment(
       message.channel as TextChannel,

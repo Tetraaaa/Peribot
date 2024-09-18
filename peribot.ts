@@ -18,7 +18,7 @@ const commands: Record<string, PeribotCommand> = {};
 for (const file of commandFiles) {
   let commandName = file.replace(".ts", "");
   const command = await import("./Commands/" + commandName);
-  commands[commandName] = command.default;
+  commands[commandName.replace("_", "")] = command.default;
 }
 
 //Nouvelle instance du bot
