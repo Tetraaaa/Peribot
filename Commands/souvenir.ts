@@ -40,7 +40,7 @@ async function getRandomChannelMessageWithAttachment(channel: TextChannel) {
   }
 }
 
-async function getAllChannelMessagesWithAttachments(
+export async function getAllChannelMessagesWithAttachments(
   channel: TextChannel
 ): Promise<Message[]> {
   const messagesWithAttachments: Message[] = [];

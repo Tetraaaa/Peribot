@@ -6,6 +6,7 @@ import {
   GatewayIntentBits,
   Message,
   PartialGroupDMChannel,
+  User,
 } from "discord.js";
 import fs from "node:fs";
 import { PeribotCommand } from "./types";
@@ -71,10 +72,22 @@ function execute(message: Message) {
   let command = args[0];
   args.shift();
 
-  if (commands[command]) {
+  if (
+    commands[command] &&
+    userHasPermissionToExecuteCommand(message.author, commands[command])
+  ) {
     commands[command].execute(message, i, peribot, ...args);
   } else {
     commands.unknown.execute(message, i, peribot);
   }
   i++;
+}
+
+function userHasPermissionToExecuteCommand(
+  user: User,
+  command: PeribotCommand
+) {
+  if (command.allowedUsers?.length)
+    return command.allowedUsers.includes(user.id);
+  return true;
 }

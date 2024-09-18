@@ -1,3 +1,6 @@
-const _CONFIG = {};
+const CONFIG = {
+  ADMINISTRATOR_IDS: ["251402163798933514"],
+  SOUVENIR_MAXIMUM_MESSAGES_CACHED_BY_CHANNEL: 50000,
+};
 
-export default _CONFIG;
+export default CONFIG;
