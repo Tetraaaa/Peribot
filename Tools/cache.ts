@@ -21,4 +21,15 @@ export const SouvenirCache = {
       }
     );
   },
+  getAllChannels: function getAllChannels() {
+    return Object.keys(souvenirCacheData.item);
+  },
+  clear: function clear(channelId: string) {
+    SouvenirCache.set(channelId, []);
+  },
+  clearAll: function clearAll() {
+    SouvenirCache.getAllChannels().forEach((channel) => {
+      SouvenirCache.clear(channel);
+    });
+  },
 };

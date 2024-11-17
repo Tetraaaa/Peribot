@@ -11,6 +11,11 @@ import {
 import fs from "node:fs";
 import { PeribotCommand } from "./types";
 import logger from "@tools/logger";
+import cron from "node-cron";
+import { SouvenirCache } from "@tools/cache";
+import { warmupSouvenirCache } from "Commands/_debug";
+
+console.log("Import des commandes...");
 
 const commandsPath = "./Commands";
 const commandFiles = fs.readdirSync(commandsPath);
@@ -21,6 +26,8 @@ for (const file of commandFiles) {
   const command = await import("./Commands/" + commandName);
   commands[commandName.replace("_", "")] = command.default;
 }
+
+console.log("Instantiation du bot...");
 
 //Nouvelle instance du bot
 const peribot = new Client({
@@ -38,6 +45,8 @@ peribot.login(secrets.token);
 
 //Fonction appelée une fois que le bot est correctement initialisé
 peribot.on(Events.ClientReady, function () {
+  console.log("Enregistrement des cron jobs...");
+  scheduleCronJobs();
   console.log("Peribot démarré, bip boup");
   logger.info("Peribot started");
   peribot.user?.setActivity("C L O D S. E X E");
@@ -97,4 +106,17 @@ function userHasPermissionToExecuteCommand(
   if (command.allowedUsers?.length)
     return command.allowedUsers.includes(user.id);
   return true;
+}
+
+function scheduleCronJobs() {
+  cron.schedule("0 0 * * *", refreshSouvenirCache);
+}
+
+function refreshSouvenirCache() {
+  logger.info("Clearing and rewarming up cache for souvenir data...");
+
+  SouvenirCache.clearAll();
+  SouvenirCache.getAllChannels().forEach((channel) => {
+    warmupSouvenirCache(channel, peribot);
+  });
 }
