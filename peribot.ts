@@ -10,6 +10,7 @@ import {
 } from "discord.js";
 import fs from "node:fs";
 import { PeribotCommand } from "./types";
+import logger from "@tools/logger";
 
 const commandsPath = "./Commands";
 const commandFiles = fs.readdirSync(commandsPath);
@@ -38,6 +39,7 @@ peribot.login(secrets.token);
 //Fonction appelée une fois que le bot est correctement initialisé
 peribot.on(Events.ClientReady, function () {
   console.log("Peribot démarré, bip boup");
+  logger.info("Peribot started");
   peribot.user?.setActivity("C L O D S. E X E");
   i = 0;
 });
@@ -72,15 +74,20 @@ function execute(message: Message) {
   let command = args[0];
   args.shift();
 
-  if (
-    commands[command] &&
-    userHasPermissionToExecuteCommand(message.author, commands[command])
-  ) {
-    commands[command].execute(message, i, peribot, ...args);
-  } else {
-    commands.unknown.execute(message, i, peribot);
+  try {
+    if (
+      commands[command] &&
+      userHasPermissionToExecuteCommand(message.author, commands[command])
+    ) {
+      commands[command].execute(message, i, peribot, ...args);
+    } else {
+      commands.unknown.execute(message, i, peribot);
+    }
+  } catch (error) {
+    logger.error(error, `Error when executing ${command}.`);
+  } finally {
+    i++;
   }
-  i++;
 }
 
 function userHasPermissionToExecuteCommand(

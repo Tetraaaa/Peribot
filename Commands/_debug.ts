@@ -14,6 +14,9 @@ const command: PeribotCommand = {
     if (rest[0] === "warmup-souvenir") {
       warmupSouvenirCache(message.channel as TextChannel, peribot);
     }
+    if (rest[0] === "throw") {
+      throw Error("Error thrown by user");
+    }
   },
 };
 export default command;

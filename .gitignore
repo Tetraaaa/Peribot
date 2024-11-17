@@ -2,3 +2,6 @@
 _private.js
 
 node_modules
+
+logs/*
+!logs/.gitkeep
