@@ -1,19 +1,13 @@
 import { secrets } from "./_private";
 
-import {
-  Client,
-  Events,
-  GatewayIntentBits,
-  Message,
-  PartialGroupDMChannel,
-  User,
-} from "discord.js";
+import { Client, Events, GatewayIntentBits, Message, User } from "discord.js";
 import fs from "node:fs";
 import { PeribotCommand } from "./types";
 import logger from "@tools/logger";
 import cron from "node-cron";
 import { SouvenirCache } from "@tools/cache";
 import { warmupSouvenirCache } from "Commands/_debug";
+import { runExpressServer } from "@tools/server";
 
 console.log("Import des commandes...");
 
@@ -30,7 +24,7 @@ for (const file of commandFiles) {
 console.log("Instantiation du bot...");
 
 //Nouvelle instance du bot
-const peribot = new Client({
+export const peribot = new Client({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
@@ -47,6 +41,7 @@ peribot.login(secrets.token);
 peribot.on(Events.ClientReady, function () {
   console.log("Enregistrement des cron jobs...");
   scheduleCronJobs();
+  runExpressServer();
   console.log("Peribot démarré, bip boup");
   logger.info("Peribot started");
   peribot.user?.setActivity("C L O D S. E X E");
