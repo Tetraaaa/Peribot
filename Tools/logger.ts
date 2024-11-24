@@ -21,8 +21,13 @@ var opts = {
 
 var logger = pino(
   {
-    level: "debug", // this MUST be set at the lowest level of the
-    // destinations
+    level: "debug",
+    formatters: {
+      level: (label) => {
+        return { level: `[${label.toLocaleUpperCase()}]` };
+      },
+    },
+    timestamp: pino.stdTimeFunctions.isoTime,
   },
   multistream(streams, opts)
 );
