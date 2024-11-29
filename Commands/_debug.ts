@@ -1,7 +1,11 @@
 import { Client, Message, TextChannel } from "discord.js";
 import { PeribotCommand } from "../types";
 import CONFIG from "../config";
-import { getAllChannelMessagesWithAttachments } from "./souvenir";
+import {
+  getAllChannelMessagesWithAttachments,
+  refreshSouvenirCache,
+  warmupSouvenirCache,
+} from "./souvenir";
 import logger from "@tools/logger";
 
 const command: PeribotCommand = {
@@ -14,6 +18,9 @@ const command: PeribotCommand = {
     }
     if (rest[0] === "warmup-souvenir") {
       warmupSouvenirCache(message.channel.id, peribot);
+    }
+    if (rest[0] === "refresh-souvenir") {
+      refreshSouvenirCache(peribot);
     }
     if (rest[0] === "throw") {
       throw Error("Error thrown by user");
@@ -37,18 +44,4 @@ async function cacheSize(channel: TextChannel) {
   let response = `\`Channels cached : ${cachedChannels}\nAttachments total: ${totalAttachments}\``;
   channel.send(response);
   console.log(response);
-}
-
-export async function warmupSouvenirCache(channelId: string, peribot: Client) {
-  const channel = (await peribot.channels.fetch(channelId)) as TextChannel;
-  logger.info(`[${channel.name}] warming up. This might take a while...`);
-  let start = new Date().getTime();
-  let messages = await getAllChannelMessagesWithAttachments(
-    channel,
-    peribot.user?.id || ""
-  );
-  let timeTakenInSeconds = Math.floor((new Date().getTime() - start) / 1000);
-  logger.info(
-    `[${channel.name}] ${messages.length} messages cached in ${timeTakenInSeconds}s.`
-  );
 }

@@ -2,6 +2,7 @@ import { Client, Message, TextChannel } from "discord.js";
 import { PeribotCommand } from "../types";
 import { getRandomArrayValue } from "../Tools/random";
 import { SouvenirCache } from "../Tools/cache";
+import logger from "@tools/logger";
 
 let possibleQuotes = (message: Message) => [
   "Hey hey hey ! Did you remember this ?",
@@ -73,4 +74,31 @@ export async function getAllChannelMessagesWithAttachments(
     messagesWithAttachments.map((m) => m.id)
   );
   return messagesWithAttachments;
+}
+
+export function refreshSouvenirCache(peribot: Client) {
+  logger.info("Clearing and rewarming up cache for souvenir data...");
+
+  try {
+    SouvenirCache.clearAll();
+    SouvenirCache.getAllChannels().forEach((channel) => {
+      warmupSouvenirCache(channel, peribot);
+    });
+  } catch (error) {
+    logger.error(error, "Error when warming up souvenir cache.");
+  }
+}
+
+export async function warmupSouvenirCache(channelId: string, peribot: Client) {
+  const channel = (await peribot.channels.fetch(channelId)) as TextChannel;
+  logger.info(`[${channel.name}] warming up. This might take a while...`);
+  let start = new Date().getTime();
+  let messages = await getAllChannelMessagesWithAttachments(
+    channel,
+    peribot.user?.id || ""
+  );
+  let timeTakenInSeconds = Math.floor((new Date().getTime() - start) / 1000);
+  logger.info(
+    `[${channel.name}] ${messages.length} messages cached in ${timeTakenInSeconds}s.`
+  );
 }

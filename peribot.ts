@@ -6,8 +6,8 @@ import { PeribotCommand } from "./types";
 import logger from "@tools/logger";
 import cron from "node-cron";
 import { SouvenirCache } from "@tools/cache";
-import { warmupSouvenirCache } from "Commands/_debug";
 import { runExpressServer } from "@tools/server";
+import { refreshSouvenirCache } from "Commands/souvenir";
 
 console.log("Import des commandes...");
 
@@ -104,18 +104,5 @@ function userHasPermissionToExecuteCommand(
 }
 
 function scheduleCronJobs() {
-  cron.schedule("0 0 * * *", refreshSouvenirCache);
-}
-
-function refreshSouvenirCache() {
-  logger.info("Clearing and rewarming up cache for souvenir data...");
-
-  try {
-    SouvenirCache.clearAll();
-    SouvenirCache.getAllChannels().forEach((channel) => {
-      warmupSouvenirCache(channel, peribot);
-    });
-  } catch (error) {
-    logger.error(error, "Error when warming up souvenir cache.");
-  }
+  cron.schedule("0 0 * * *", () => refreshSouvenirCache(peribot));
 }
