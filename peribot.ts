@@ -110,8 +110,12 @@ function scheduleCronJobs() {
 function refreshSouvenirCache() {
   logger.info("Clearing and rewarming up cache for souvenir data...");
 
-  SouvenirCache.clearAll();
-  SouvenirCache.getAllChannels().forEach((channel) => {
-    warmupSouvenirCache(channel, peribot);
-  });
+  try {
+    SouvenirCache.clearAll();
+    SouvenirCache.getAllChannels().forEach((channel) => {
+      warmupSouvenirCache(channel, peribot);
+    });
+  } catch (error) {
+    logger.error(error, "Error when warming up souvenir cache.");
+  }
 }
