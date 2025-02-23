@@ -1,7 +1,7 @@
 import CONFIG from "config";
 import express from "express";
 import { peribot } from "peribot";
-import process from "node:process";
+import process, { memoryUsage } from "node:process";
 import logger from "./logger";
 
 function shutDownExpressServer(server) {
@@ -14,11 +14,23 @@ export function runExpressServer() {
 
   const app = express();
 
-  app.get("/", (_, res) => {
+  app.get("/", async (_, res) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
+
+    const cache = await import("../cache/souvenir.json");
+    let cachedChannels = 0;
+    let totalAttachments = 0;
+    for (const [key, value] of Object.entries(cache.default.item)) {
+      cachedChannels++;
+      totalAttachments += value.length;
+    }
+
     res.json({
       status: "running",
-      uptime: peribot.uptime,
+      uptime: Math.floor(peribot.uptime / 1000),
+      memoryUsed: memoryUsage().rss,
+      cachedChannels,
+      totalAttachments,
     });
   });
 
