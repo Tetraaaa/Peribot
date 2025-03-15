@@ -17,17 +17,16 @@ const command: PeribotCommand = {
   description:
     "Peribot picks a random picture from this channel and reposts it.",
   execute: async (message, dialogIndex, peribot) => {
-    await getRandomChannelMessageWithAttachment(
+    const messagePicked = await getRandomChannelMessageWithAttachment(
       message.channel as TextChannel,
       peribot.user?.id || ""
-    ).then((messagePicked) => {
-      if (!messagePicked)
-        throw "Unable to find a message with an attachment for this channel. Maybe this channel hasn't been cached yet, or does not contain any messages with attachments.";
-      messagePicked.reply({
-        content:
-          possibleQuotes(message)[dialogIndex % possibleQuotes(message).length],
-        files: [messagePicked.attachments.at(0)!],
-      });
+    );
+    if (!messagePicked)
+      throw "Unable to find a message with an attachment for this channel. Maybe this channel hasn't been cached yet, or does not contain any messages with attachments.";
+    messagePicked.reply({
+      content:
+        possibleQuotes(message)[dialogIndex % possibleQuotes(message).length],
+      files: [messagePicked.attachments.at(0)!],
     });
   },
 };
@@ -39,14 +38,11 @@ async function getRandomChannelMessageWithAttachment(
 ) {
   if (SouvenirCache.hit(channel.id)) {
     const messageIdPicked = getRandomArrayValue(SouvenirCache.get(channel.id)!);
-    if (!messageIdPicked)
-      throw "Unable to find a message with an attachment for this channel. Maybe SouvenirCache is empty ?";
-    return channel.messages.fetch(messageIdPicked);
-  } else {
-    return getRandomArrayValue(
-      await getAllChannelMessagesWithAttachments(channel, peribotId)
-    );
+    if (messageIdPicked) return channel.messages.fetch(messageIdPicked);
   }
+  return getRandomArrayValue(
+    await getAllChannelMessagesWithAttachments(channel, peribotId)
+  );
 }
 
 export async function getAllChannelMessagesWithAttachments(
@@ -76,10 +72,14 @@ export async function getAllChannelMessagesWithAttachments(
     cycles++;
   } while (cycles < 500);
 
-  SouvenirCache.set(
-    channel.id,
-    messagesWithAttachments.map((m) => m.id)
-  );
+  if (messagesWithAttachments.length) {
+    SouvenirCache.clear(channel.id);
+    SouvenirCache.set(
+      channel.id,
+      messagesWithAttachments.map((m) => m.id)
+    );
+  }
+
   return messagesWithAttachments;
 }
 
@@ -87,7 +87,6 @@ export function refreshSouvenirCache(peribot: Client) {
   logger.info("Clearing and rewarming up cache for souvenir data...");
 
   try {
-    SouvenirCache.clearAll();
     SouvenirCache.getAllChannels().forEach((channel) => {
       warmupSouvenirCache(channel, peribot);
     });

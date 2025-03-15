@@ -48,7 +48,6 @@ peribot.login(secrets.token);
 //Fonction appelée une fois que le bot est correctement initialisé
 peribot.on(Events.ClientReady, function () {
   let host = hostname();
-  logger.info("Enregistrement des cron jobs...");
   scheduleCronJobs();
   runExpressServer();
   registerCrashListeners();
@@ -119,7 +118,7 @@ async function executeCommand(
   try {
     await commandToExecute.execute(originalMessage, i, peribot, ...args);
   } catch (error) {
-    logger.error(`Error while running command ${command}:`, error);
+    logger.error(`Error while running command $${command}:`, error);
   }
 }
 
@@ -133,6 +132,7 @@ function userHasPermissionToExecuteCommand(
 }
 
 function scheduleCronJobs() {
+  logger.info("Enregistrement des cron jobs...");
   cron.schedule("0 0 * * *", () => refreshSouvenirCache(peribot));
 }
 
