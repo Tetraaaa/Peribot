@@ -7,8 +7,8 @@ export interface PeribotCommand {
     message: Message,
     dialogIndex: number,
     peribot: Client,
-    ...args
-  ) => void;
+    ...args: any
+  ) => Promise<void>;
 }
 
 export interface SouvenirCacheData {

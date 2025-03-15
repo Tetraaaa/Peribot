@@ -14,7 +14,7 @@ let possibleQuotes = (message: Message) => [
 
 const command: PeribotCommand = {
   description: "Currently in maintenance.",
-  execute: (message, dialogIndex, _, joueur) => {
+  execute: async (message, dialogIndex, _, joueur) => {
     let channel = message.channel as TextChannel;
     channel.send(possibleQuotes(message)[dialogIndex % possibleQuotes.length]);
     channel.send("`🔧 Connexion à l'API Riot Games...`");

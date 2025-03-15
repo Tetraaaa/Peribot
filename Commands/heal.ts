@@ -19,7 +19,7 @@ const command: PeribotCommand = {
   description:
     "Peridots comes and squeezes some fairy juice into your channel.",
 
-  execute: (message, dialogIndex) => {
+  execute: async (message, dialogIndex) => {
     const { guildId, guild, member } = message;
 
     const isVoiceChannelJoinable = Boolean(

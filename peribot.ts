@@ -66,19 +66,23 @@ peribot.on(Events.ClientReady, function () {
   });
 });
 
-peribot.on(Events.MessageCreate, function (message) {
-  execute(message);
-});
+peribot.on(Events.MessageCreate, onMessage);
 
-//Prend un message destiné à Peribot en paramètre et effectue la commande correspondante
-function execute(message: Message) {
+async function onMessage(message: Message) {
   if (!message.content.startsWith("$")) return;
 
-  let text = message.content.substring(1);
+  let messageContent = message.content.substring(1);
+  let [command, ...args] = parseCommand(messageContent);
+
+  executeCommand(message.author, command, message, ...args);
+  i++;
+}
+
+function parseCommand(commandText: string) {
   let parsedCommand = "";
 
   let currentlyInString = false;
-  [...text].forEach((character) => {
+  [...commandText].forEach((character) => {
     if (character === " ") {
       if (currentlyInString) {
         parsedCommand = parsedCommand += character;
@@ -95,20 +99,27 @@ function execute(message: Message) {
   let args = parsedCommand.split("[argumentSeparator]");
   let command = args[0];
   args.shift();
+  return [command, ...args];
+}
+
+async function executeCommand(
+  user: User,
+  command: string,
+  originalMessage: Message<boolean>,
+  ...args: any
+) {
+  let commandToExecute = commands[command];
+
+  const isCommandExecutable =
+    Boolean(commandToExecute) &&
+    userHasPermissionToExecuteCommand(user, commandToExecute);
+
+  if (!isCommandExecutable) commandToExecute = commands.unknown;
 
   try {
-    if (
-      commands[command] &&
-      userHasPermissionToExecuteCommand(message.author, commands[command])
-    ) {
-      commands[command].execute(message, i, peribot, ...args);
-    } else {
-      commands.unknown.execute(message, i, peribot);
-    }
+    await commandToExecute.execute(originalMessage, i, peribot, ...args);
   } catch (error) {
-    logger.error(error, `Error when executing ${command}.`);
-  } finally {
-    i++;
+    logger.error(`Error while running command ${command}:`, error);
   }
 }
 

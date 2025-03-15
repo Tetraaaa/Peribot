@@ -12,7 +12,7 @@ const command: PeribotCommand = {
   description: "",
   allowedUsers: CONFIG.ADMINISTRATOR_IDS,
 
-  execute: (message, dialogIndex, peribot, ...rest) => {
+  execute: async (message, dialogIndex, peribot, ...rest) => {
     if (rest[0] === "cacheSize") {
       cacheSize(message.channel as TextChannel);
     }

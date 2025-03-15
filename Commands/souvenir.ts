@@ -16,8 +16,8 @@ let possibleQuotes = (message: Message) => [
 const command: PeribotCommand = {
   description:
     "Peribot picks a random picture from this channel and reposts it.",
-  execute: (message, dialogIndex, peribot) => {
-    getRandomChannelMessageWithAttachment(
+  execute: async (message, dialogIndex, peribot) => {
+    await getRandomChannelMessageWithAttachment(
       message.channel as TextChannel,
       peribot.user?.id || ""
     ).then((messagePicked) => {

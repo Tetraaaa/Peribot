@@ -14,7 +14,7 @@ const possibleQuotes = (message: Message) => [
 const command: PeribotCommand = {
   description:
     "Sends you a private message with this list of commands you are reading right now, why are you even asking",
-  execute: (message, dialogIndex) => {
+  execute: async (message, dialogIndex) => {
     getCommandsList().then((commandsList) => {
       message.author.send(commandsList);
     });

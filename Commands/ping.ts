@@ -19,7 +19,7 @@ let possibleQuotesForHighLatency = [
 const command: PeribotCommand = {
   description:
     "Gets the current latency between the server and Peribot, in milliseconds.",
-  execute: (message, dialogIndex) => {
+  execute: async (message, dialogIndex) => {
     (message.channel as TextChannel).send("Pinging...").then((sentMessage) => {
       let ping = sentMessage.createdTimestamp - message.createdTimestamp;
       let possibleQuotes = possibleQuotesForLowLatency;
