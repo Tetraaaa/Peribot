@@ -1,6 +1,7 @@
 import _souvenirCacheData from "../cache/souvenir.json";
 import fs from "node:fs";
 import { SouvenirCacheData } from "../types";
+import logger from "./logger";
 
 const souvenirCacheData: SouvenirCacheData = _souvenirCacheData;
 
@@ -17,7 +18,7 @@ export const SouvenirCache = {
       "./cache/souvenir.json",
       JSON.stringify(souvenirCacheData, null, 2),
       (err) => {
-        if (err) logger.info("Error writing data to cache : ", err?.message);
+        if (err) logger.error("Error writing data to cache : ", err?.message);
       }
     );
   },

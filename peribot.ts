@@ -1,5 +1,3 @@
-import { secrets } from "./_private";
-
 import {
   ActivityType,
   Client,
@@ -17,6 +15,7 @@ import { SouvenirCache } from "@tools/cache";
 import { runExpressServer } from "@tools/server";
 import { refreshSouvenirCache } from "Commands/souvenir";
 import { hostname } from "node:os";
+import { secrets } from "_private";
 
 logger.info("Import des commandes...");
 
@@ -42,7 +41,7 @@ export const peribot = new Client({
   ],
 });
 //Nombre de phrases prononcées par le bot depuis son lancement
-var i;
+var i = 0;
 //Confidentiel : Token privé du bot
 peribot.login(secrets.token);
 
@@ -54,7 +53,7 @@ peribot.on(Events.ClientReady, function () {
   runExpressServer();
   registerCrashListeners();
   logger.info("Peribot démarré, bip boup");
-  peribot.user.setPresence({
+  peribot.user?.setPresence({
     activities: [
       {
         name: "👍",
@@ -65,7 +64,6 @@ peribot.on(Events.ClientReady, function () {
     ],
     status: host === "PC-DE-TON" ? "idle" : "online",
   });
-  i = 0;
 });
 
 peribot.on(Events.MessageCreate, function (message) {

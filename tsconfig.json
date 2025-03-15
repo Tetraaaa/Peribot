@@ -9,6 +9,7 @@
     "paths": {
       "@tools/*": ["Tools/*"],
     },
+    "strict": true,
     "target": "es2017",
   }
 }

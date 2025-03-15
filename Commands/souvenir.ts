@@ -1,4 +1,4 @@
-import { Client, Message, TextChannel } from "discord.js";
+import { Client, Collection, Message, TextChannel } from "discord.js";
 import { PeribotCommand } from "../types";
 import { getRandomArrayValue } from "../Tools/random";
 import { SouvenirCache } from "../Tools/cache";
@@ -21,6 +21,8 @@ const command: PeribotCommand = {
       message.channel as TextChannel,
       peribot.user?.id || ""
     ).then((messagePicked) => {
+      if (!messagePicked)
+        throw "Unable to find a message with an attachment for this channel. Maybe this channel hasn't been cached yet, or does not contain any messages with attachments.";
       messagePicked.reply({
         content:
           possibleQuotes(message)[dialogIndex % possibleQuotes(message).length],
@@ -37,6 +39,8 @@ async function getRandomChannelMessageWithAttachment(
 ) {
   if (SouvenirCache.hit(channel.id)) {
     const messageIdPicked = getRandomArrayValue(SouvenirCache.get(channel.id)!);
+    if (!messageIdPicked)
+      throw "Unable to find a message with an attachment for this channel. Maybe SouvenirCache is empty ?";
     return channel.messages.fetch(messageIdPicked);
   } else {
     return getRandomArrayValue(
@@ -54,7 +58,10 @@ export async function getAllChannelMessagesWithAttachments(
   let cycles = 0;
   let earliestMessageIdFetched: string | undefined = undefined;
   do {
-    const messages = await channel.messages.fetch({
+    const messages: Collection<
+      string,
+      Message<true>
+    > = await channel.messages.fetch({
       limit: 100,
       before: earliestMessageIdFetched,
     });

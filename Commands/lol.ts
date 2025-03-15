@@ -1,7 +1,7 @@
 import { Message, TextChannel } from "discord.js";
 import { PeribotCommand } from "../types";
-import { secrets } from "../_private";
 import logger from "@tools/logger";
+import { secrets } from "_private";
 
 let possibleQuotes = (message: Message) => [
   "Okay, I'm calling Riot Games, hold on.",
@@ -55,7 +55,7 @@ const command: PeribotCommand = {
 
                 if (json.length > 0) {
                   let queue = json.find(
-                    (queue) => queue.queueType === "RANKED_SOLO_5x5"
+                    (queue: any) => queue.queueType === "RANKED_SOLO_5x5"
                   );
                   if (!queue) queue = json[0];
                   channel.send(
@@ -80,12 +80,12 @@ const command: PeribotCommand = {
 export default command;
 
 function generateRandomMessageFromTiers(
-  tier,
-  rank,
-  wins,
-  losses,
-  summonerId,
-  summonerLevel
+  tier: string,
+  rank: string,
+  wins: number,
+  losses: number,
+  summonerId: string,
+  summonerLevel: number
 ) {
   let winrate = Math.round((wins * 100) / (wins + losses));
   let message = `Niveau ${summonerLevel} \nWins : ${wins}, Losses: ${losses}, Winrate : ${winrate}%.\n`;
