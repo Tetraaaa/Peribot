@@ -42,8 +42,8 @@ peribot.on(Events.ClientReady, function () {
   logger.info("Enregistrement des cron jobs...");
   scheduleCronJobs();
   runExpressServer();
-  console.log("Peribot démarré, bip boup");
-  logger.info("Peribot started");
+  registerCrashListeners();
+  logger.info("Peribot démarré, bip boup");
   peribot.user?.setActivity("C L O D S. E X E");
   i = 0;
 });
@@ -105,4 +105,16 @@ function userHasPermissionToExecuteCommand(
 
 function scheduleCronJobs() {
   cron.schedule("0 0 * * *", () => refreshSouvenirCache(peribot));
+}
+
+function registerCrashListeners() {
+  process.on("uncaughtException", (err) => {
+    logger.fatal(err, "uncaught exception detected");
+    process.abort();
+  });
+
+  process.on("unhandledRejection", (err) => {
+    logger.fatal(err, "unhandled rejection detected");
+    process.abort();
+  });
 }
