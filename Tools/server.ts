@@ -10,7 +10,7 @@ function shutDownExpressServer(server) {
 }
 
 export function runExpressServer() {
-  console.log("Démarrage du serveur express...");
+  logger.info("Démarrage du serveur express...");
 
   const app = express();
 

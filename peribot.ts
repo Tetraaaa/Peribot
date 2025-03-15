@@ -9,7 +9,7 @@ import { SouvenirCache } from "@tools/cache";
 import { runExpressServer } from "@tools/server";
 import { refreshSouvenirCache } from "Commands/souvenir";
 
-console.log("Import des commandes...");
+logger.info("Import des commandes...");
 
 const commandsPath = "./Commands";
 const commandFiles = fs.readdirSync(commandsPath);
@@ -21,7 +21,7 @@ for (const file of commandFiles) {
   commands[commandName.replace("_", "")] = command.default;
 }
 
-console.log("Instantiation du bot...");
+logger.info("Instantiation du bot...");
 
 //Nouvelle instance du bot
 export const peribot = new Client({
@@ -39,7 +39,7 @@ peribot.login(secrets.token);
 
 //Fonction appelée une fois que le bot est correctement initialisé
 peribot.on(Events.ClientReady, function () {
-  console.log("Enregistrement des cron jobs...");
+  logger.info("Enregistrement des cron jobs...");
   scheduleCronJobs();
   runExpressServer();
   console.log("Peribot démarré, bip boup");

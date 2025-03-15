@@ -43,5 +43,5 @@ async function cacheSize(channel: TextChannel) {
   }
   let response = `\`Channels cached : ${cachedChannels}\nAttachments total: ${totalAttachments}\``;
   channel.send(response);
-  console.log(response);
+  logger.info(response);
 }

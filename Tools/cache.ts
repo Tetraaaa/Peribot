@@ -17,7 +17,7 @@ export const SouvenirCache = {
       "./cache/souvenir.json",
       JSON.stringify(souvenirCacheData, null, 2),
       (err) => {
-        if (err) console.log("Error writing data to cache : ", err?.message);
+        if (err) logger.info("Error writing data to cache : ", err?.message);
       }
     );
   },
