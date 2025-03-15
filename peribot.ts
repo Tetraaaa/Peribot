@@ -1,6 +1,14 @@
 import { secrets } from "./_private";
 
-import { Client, Events, GatewayIntentBits, Message, User } from "discord.js";
+import {
+  ActivityType,
+  Client,
+  Events,
+  GatewayIntentBits,
+  Message,
+  PresenceStatusData,
+  User,
+} from "discord.js";
 import fs from "node:fs";
 import { PeribotCommand } from "./types";
 import logger from "@tools/logger";
@@ -8,6 +16,7 @@ import cron from "node-cron";
 import { SouvenirCache } from "@tools/cache";
 import { runExpressServer } from "@tools/server";
 import { refreshSouvenirCache } from "Commands/souvenir";
+import { hostname } from "node:os";
 
 logger.info("Import des commandes...");
 
@@ -39,12 +48,23 @@ peribot.login(secrets.token);
 
 //Fonction appelée une fois que le bot est correctement initialisé
 peribot.on(Events.ClientReady, function () {
+  let host = hostname();
   logger.info("Enregistrement des cron jobs...");
   scheduleCronJobs();
   runExpressServer();
   registerCrashListeners();
   logger.info("Peribot démarré, bip boup");
-  peribot.user?.setActivity("C L O D S. E X E");
+  peribot.user.setPresence({
+    activities: [
+      {
+        name: "👍",
+        state:
+          host === "PC-DE-TON" ? "🔧 Under maintenance" : "C L O D S. E X E",
+        type: ActivityType.Custom,
+      },
+    ],
+    status: host === "PC-DE-TON" ? "idle" : "online",
+  });
   i = 0;
 });
 
