@@ -1,6 +1,6 @@
 import CONFIG from "config";
 import express from "express";
-import { peribot } from "peribot";
+import { peribot } from "index";
 import process, { memoryUsage } from "node:process";
 import logger from "./logger";
 import { IncomingMessage, Server, ServerResponse } from "node:http";

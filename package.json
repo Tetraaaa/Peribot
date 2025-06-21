@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
-  "main": "index.js",
+  "main": "index.ts",
   "dependencies": {
     "@discordjs/voice": "^0.17.0",
     "@types/express": "^5.0.0",
@@ -18,7 +18,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "peribot": "npx tsx peribot.ts"
+    "peribot": "npx tsx index.ts"
   },
   "author": "",
   "license": "ISC"

@@ -1,7 +1,7 @@
 import { postRandomSouvenir, refreshSouvenirCache } from "Commands/souvenir";
 import logger from "./logger";
 import cron from "node-cron";
-import { dialogIndex, peribot } from "peribot";
+import { dialogIndex, peribot } from "index";
 
 export const CronService = {
   souvenirOdds: 0,
