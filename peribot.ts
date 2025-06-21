@@ -10,12 +10,12 @@ import {
 import fs from "node:fs";
 import { PeribotCommand } from "./types";
 import logger from "@tools/logger";
-import cron from "node-cron";
 import { SouvenirCache } from "@tools/cache";
 import { runExpressServer } from "@tools/server";
 import { refreshSouvenirCache } from "Commands/souvenir";
 import { hostname } from "node:os";
 import { secrets } from "_private";
+import { CronService } from "@tools/cron-service";
 
 logger.info("Import des commandes...");
 
@@ -48,7 +48,7 @@ peribot.login(secrets.token);
 //Fonction appelée une fois que le bot est correctement initialisé
 peribot.on(Events.ClientReady, function () {
   let host = hostname();
-  scheduleCronJobs();
+  CronService.scheduleCronJobs();
   runExpressServer();
   registerCrashListeners();
   logger.info("Peribot démarré, bip boup");
@@ -129,11 +129,6 @@ function userHasPermissionToExecuteCommand(
   if (command.allowedUsers?.length)
     return command.allowedUsers.includes(user.id);
   return true;
-}
-
-function scheduleCronJobs() {
-  logger.info("Enregistrement des cron jobs...");
-  cron.schedule("0 0 * * *", () => refreshSouvenirCache(peribot));
 }
 
 function registerCrashListeners() {
