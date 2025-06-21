@@ -41,7 +41,7 @@ export const peribot = new Client({
   ],
 });
 //Nombre de phrases prononcées par le bot depuis son lancement
-var i = 0;
+export var dialogIndex = 0;
 //Confidentiel : Token privé du bot
 peribot.login(secrets.token);
 
@@ -74,7 +74,7 @@ async function onMessage(message: Message) {
   let [command, ...args] = parseCommand(messageContent);
 
   executeCommand(message.author, command, message, ...args);
-  i++;
+  dialogIndex++;
 }
 
 function parseCommand(commandText: string) {
@@ -116,7 +116,12 @@ async function executeCommand(
   if (!isCommandExecutable) commandToExecute = commands.unknown;
 
   try {
-    await commandToExecute.execute(originalMessage, i, peribot, ...args);
+    await commandToExecute.execute(
+      originalMessage,
+      dialogIndex,
+      peribot,
+      ...args
+    );
   } catch (error) {
     logger.error(`Error while running command $${command}:`, error);
   }

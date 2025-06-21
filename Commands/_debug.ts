@@ -3,6 +3,7 @@ import { PeribotCommand } from "../types";
 import CONFIG from "../config";
 import {
   getAllChannelMessagesWithAttachments,
+  postRandomSouvenir,
   refreshSouvenirCache,
   warmupSouvenirCache,
 } from "./souvenir";
@@ -28,6 +29,9 @@ const command: PeribotCommand = {
     if (rest[0] === "stop") {
       logger.info("Destroying bot instance...");
       peribot.destroy();
+    }
+    if (rest[0] === "random-souvenir") {
+      postRandomSouvenir(peribot, dialogIndex);
     }
   },
 };

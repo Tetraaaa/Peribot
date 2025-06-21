@@ -108,3 +108,28 @@ export async function warmupSouvenirCache(channelId: string, peribot: Client) {
     `[${channel.name}] ${messages.length} messages cached in ${timeTakenInSeconds}s.`
   );
 }
+
+export async function postRandomSouvenir(peribot: Client, dialogIndex: number) {
+  const randomChannelId = getRandomArrayValue(SouvenirCache.getAllChannels());
+  if (!randomChannelId) {
+    logger.error(
+      "Unable to get random channel from souvenir cache, maybe cache is empty ?"
+    );
+    return;
+  }
+  const channel = (await peribot.channels.fetch(
+    randomChannelId
+  )) as TextChannel;
+  const messagePicked = await getRandomChannelMessageWithAttachment(
+    channel,
+    peribot.user?.id || ""
+  );
+  if (!messagePicked) return;
+  messagePicked.reply({
+    content:
+      possibleQuotes(messagePicked)[
+        dialogIndex % possibleQuotes(messagePicked).length
+      ],
+    files: [messagePicked.attachments.at(0)!],
+  });
+}
