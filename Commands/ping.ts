@@ -1,3 +1,4 @@
+import { Peribot } from "@tools/peribot";
 import { TextChannel } from "discord.js";
 import { PeribotCommand } from "../types";
 
@@ -19,13 +20,15 @@ let possibleQuotesForHighLatency = [
 const command: PeribotCommand = {
   description:
     "Gets the current latency between the server and Peribot, in milliseconds.",
-  execute: async (message, dialogIndex) => {
+  execute: async (message) => {
     (message.channel as TextChannel).send("Pinging...").then((sentMessage) => {
       let ping = sentMessage.createdTimestamp - message.createdTimestamp;
       let possibleQuotes = possibleQuotesForLowLatency;
       if (ping > 400) possibleQuotes = possibleQuotesForHighLatency;
       sentMessage.edit(
-        `${possibleQuotes[dialogIndex % possibleQuotes.length]} ${ping} ms.`
+        `${
+          possibleQuotes[Peribot.dialogIndex % possibleQuotes.length]
+        } ${ping} ms.`
       );
     });
   },

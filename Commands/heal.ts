@@ -1,5 +1,3 @@
-import { Message, TextChannel } from "discord.js";
-import { PeribotCommand } from "../types";
 import {
   AudioPlayerStatus,
   createAudioPlayer,
@@ -7,6 +5,9 @@ import {
   joinVoiceChannel,
   VoiceConnectionStatus,
 } from "@discordjs/voice";
+import { Peribot } from "@tools/peribot";
+import { TextChannel } from "discord.js";
+import { PeribotCommand } from "../types";
 
 const possibleErrQuotes = [
   "Hey, I can't find you anywhere !",
@@ -19,7 +20,7 @@ const command: PeribotCommand = {
   description:
     "Peridots comes and squeezes some fairy juice into your channel.",
 
-  execute: async (message, dialogIndex) => {
+  execute: async (message) => {
     const { guildId, guild, member } = message;
 
     const isVoiceChannelJoinable = Boolean(
@@ -31,7 +32,7 @@ const command: PeribotCommand = {
 
     if (!isVoiceChannelJoinable) {
       (message.channel as TextChannel).send(
-        possibleErrQuotes[dialogIndex % possibleErrQuotes.length]
+        possibleErrQuotes[Peribot.dialogIndex % possibleErrQuotes.length]
       );
       return;
     }

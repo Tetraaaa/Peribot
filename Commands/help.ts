@@ -1,6 +1,7 @@
+import { Peribot } from "@tools/peribot";
 import { Message, TextChannel } from "discord.js";
-import { PeribotCommand } from "../types";
 import fs from "node:fs";
+import { PeribotCommand } from "../types";
 
 const possibleQuotes = (message: Message) => [
   "Help ? Yeah sure, there you go, check your DMs.",
@@ -14,12 +15,14 @@ const possibleQuotes = (message: Message) => [
 const command: PeribotCommand = {
   description:
     "Sends you a private message with this list of commands you are reading right now, why are you even asking",
-  execute: async (message, dialogIndex) => {
+  execute: async (message) => {
     getCommandsList().then((commandsList) => {
       message.author.send(commandsList);
     });
     (message.channel as TextChannel).send(
-      possibleQuotes(message)[dialogIndex % possibleQuotes(message).length]
+      possibleQuotes(message)[
+        Peribot.dialogIndex % possibleQuotes(message).length
+      ]
     );
   },
 };

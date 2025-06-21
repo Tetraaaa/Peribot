@@ -1,8 +1,9 @@
-import { Client, Collection, Message, TextChannel } from "discord.js";
-import { PeribotCommand } from "../types";
-import { getRandomArrayValue } from "../Tools/random";
-import { SouvenirCache } from "../Tools/cache";
 import logger from "@tools/logger";
+import { Peribot } from "@tools/peribot";
+import { Client, Collection, Message, TextChannel } from "discord.js";
+import { SouvenirCache } from "../Tools/cache";
+import { getRandomArrayValue } from "../Tools/random";
+import { PeribotCommand } from "../types";
 
 let possibleQuotes = (message: Message) => [
   "Hey hey hey ! Did you remember this ?",
@@ -16,16 +17,18 @@ let possibleQuotes = (message: Message) => [
 const command: PeribotCommand = {
   description:
     "Peribot picks a random picture from this channel and reposts it.",
-  execute: async (message, dialogIndex, peribot) => {
+  execute: async (message) => {
     const messagePicked = await getRandomChannelMessageWithAttachment(
       message.channel as TextChannel,
-      peribot.user?.id || ""
+      Peribot.instance.user?.id || ""
     );
     if (!messagePicked)
       throw "Unable to find a message with an attachment for this channel. Maybe this channel hasn't been cached yet, or does not contain any messages with attachments.";
     messagePicked.reply({
       content:
-        possibleQuotes(message)[dialogIndex % possibleQuotes(message).length],
+        possibleQuotes(message)[
+          Peribot.dialogIndex % possibleQuotes(message).length
+        ],
       files: [messagePicked.attachments.at(0)!],
     });
   },
@@ -83,12 +86,12 @@ export async function getAllChannelMessagesWithAttachments(
   return messagesWithAttachments;
 }
 
-export function refreshSouvenirCache(peribot: Client) {
+export function refreshSouvenirCache() {
   logger.info("Clearing and rewarming up cache for souvenir data...");
 
   try {
     SouvenirCache.getAllChannels().forEach((channel) => {
-      warmupSouvenirCache(channel, peribot);
+      warmupSouvenirCache(channel, Peribot.instance);
     });
   } catch (error) {
     logger.error(error, "Error when warming up souvenir cache.");
@@ -109,7 +112,7 @@ export async function warmupSouvenirCache(channelId: string, peribot: Client) {
   );
 }
 
-export async function postRandomSouvenir(peribot: Client, dialogIndex: number) {
+export async function postRandomSouvenir() {
   const randomChannelId = getRandomArrayValue(SouvenirCache.getAllChannels());
   if (!randomChannelId) {
     logger.error(
@@ -117,18 +120,18 @@ export async function postRandomSouvenir(peribot: Client, dialogIndex: number) {
     );
     return;
   }
-  const channel = (await peribot.channels.fetch(
+  const channel = (await Peribot.instance.channels.fetch(
     randomChannelId
   )) as TextChannel;
   const messagePicked = await getRandomChannelMessageWithAttachment(
     channel,
-    peribot.user?.id || ""
+    Peribot.instance.user?.id || ""
   );
   if (!messagePicked) return;
   messagePicked.reply({
     content:
       possibleQuotes(messagePicked)[
-        dialogIndex % possibleQuotes(messagePicked).length
+        Peribot.dialogIndex % possibleQuotes(messagePicked).length
       ],
     files: [messagePicked.attachments.at(0)!],
   });

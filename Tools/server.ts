@@ -1,9 +1,9 @@
 import CONFIG from "config";
 import express from "express";
-import { peribot } from "index";
+import { IncomingMessage, Server, ServerResponse } from "node:http";
 import process, { memoryUsage } from "node:process";
 import logger from "./logger";
-import { IncomingMessage, Server, ServerResponse } from "node:http";
+import { Peribot } from "./peribot";
 
 function shutDownExpressServer(
   server: Server<typeof IncomingMessage, typeof ServerResponse>
@@ -30,7 +30,7 @@ export function runExpressServer() {
 
     res.json({
       status: "running",
-      uptime: Math.floor((peribot.uptime || 0) / 1000),
+      uptime: Math.floor((Peribot.instance.uptime || 0) / 1000),
       memoryUsed: memoryUsage().rss,
       cachedChannels,
       totalAttachments,

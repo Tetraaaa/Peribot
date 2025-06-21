@@ -1,37 +1,37 @@
-import { Client, Message, TextChannel } from "discord.js";
-import { PeribotCommand } from "../types";
+import logger from "@tools/logger";
+import { Peribot } from "@tools/peribot";
+import { TextChannel } from "discord.js";
 import CONFIG from "../config";
+import { PeribotCommand } from "../types";
 import {
-  getAllChannelMessagesWithAttachments,
   postRandomSouvenir,
   refreshSouvenirCache,
   warmupSouvenirCache,
 } from "./souvenir";
-import logger from "@tools/logger";
 
 const command: PeribotCommand = {
   description: "",
   allowedUsers: CONFIG.ADMINISTRATOR_IDS,
 
-  execute: async (message, dialogIndex, peribot, ...rest) => {
+  execute: async (message, ...rest) => {
     if (rest[0] === "cacheSize") {
       cacheSize(message.channel as TextChannel);
     }
     if (rest[0] === "warmup-souvenir") {
-      warmupSouvenirCache(message.channel.id, peribot);
+      warmupSouvenirCache(message.channel.id, Peribot.instance);
     }
     if (rest[0] === "refresh-souvenir") {
-      refreshSouvenirCache(peribot);
+      refreshSouvenirCache();
     }
     if (rest[0] === "throw") {
       throw Error("Error thrown by user");
     }
     if (rest[0] === "stop") {
       logger.info("Destroying bot instance...");
-      peribot.destroy();
+      Peribot.instance.destroy();
     }
     if (rest[0] === "random-souvenir") {
-      postRandomSouvenir(peribot, dialogIndex);
+      postRandomSouvenir();
     }
   },
 };

@@ -1,3 +1,4 @@
+import { Peribot } from "@tools/peribot";
 import { Message, TextChannel } from "discord.js";
 import { PeribotCommand } from "../types";
 
@@ -18,9 +19,11 @@ let possibleQuotes = (message: Message) => [
 
 const command: PeribotCommand = {
   description: "",
-  execute: async (message, dialogIndex) => {
+  execute: async (message) => {
     (message.channel as TextChannel).send(
-      possibleQuotes(message)[dialogIndex % possibleQuotes(message).length]
+      possibleQuotes(message)[
+        Peribot.dialogIndex % possibleQuotes(message).length
+      ]
     );
   },
 };

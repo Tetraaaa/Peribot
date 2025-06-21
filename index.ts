@@ -1,21 +1,19 @@
+import { CronService } from "@tools/cron-service";
+import logger from "@tools/logger";
+import { Peribot } from "@tools/peribot";
+import { runExpressServer } from "@tools/server";
+import { secrets } from "_private";
 import {
   ActivityType,
   Client,
   Events,
   GatewayIntentBits,
   Message,
-  PresenceStatusData,
   User,
 } from "discord.js";
 import fs from "node:fs";
-import { PeribotCommand } from "./types";
-import logger from "@tools/logger";
-import { SouvenirCache } from "@tools/cache";
-import { runExpressServer } from "@tools/server";
-import { refreshSouvenirCache } from "Commands/souvenir";
 import { hostname } from "node:os";
-import { secrets } from "_private";
-import { CronService } from "@tools/cron-service";
+import { PeribotCommand } from "./types";
 
 logger.info("Import des commandes...");
 
@@ -32,7 +30,7 @@ for (const file of commandFiles) {
 logger.info("Instantiation du bot...");
 
 //Nouvelle instance du bot
-export const peribot = new Client({
+Peribot.instance = new Client({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
@@ -40,19 +38,18 @@ export const peribot = new Client({
     GatewayIntentBits.GuildVoiceStates,
   ],
 });
-//Nombre de phrases prononcées par le bot depuis son lancement
-export var dialogIndex = 0;
+
 //Confidentiel : Token privé du bot
-peribot.login(secrets.token);
+Peribot.instance.login(secrets.token);
 
 //Fonction appelée une fois que le bot est correctement initialisé
-peribot.on(Events.ClientReady, function () {
+Peribot.instance.on(Events.ClientReady, function () {
   let host = hostname();
   CronService.scheduleCronJobs();
   runExpressServer();
   registerCrashListeners();
   logger.info("Peribot démarré, bip boup");
-  peribot.user?.setPresence({
+  Peribot.instance!.user?.setPresence({
     activities: [
       {
         name: "👍",
@@ -65,7 +62,7 @@ peribot.on(Events.ClientReady, function () {
   });
 });
 
-peribot.on(Events.MessageCreate, onMessage);
+Peribot.instance.on(Events.MessageCreate, onMessage);
 
 async function onMessage(message: Message) {
   if (!message.content.startsWith("$")) return;
@@ -74,7 +71,7 @@ async function onMessage(message: Message) {
   let [command, ...args] = parseCommand(messageContent);
 
   executeCommand(message.author, command, message, ...args);
-  dialogIndex++;
+  Peribot.dialogIndex++;
 }
 
 function parseCommand(commandText: string) {
@@ -116,12 +113,7 @@ async function executeCommand(
   if (!isCommandExecutable) commandToExecute = commands.unknown;
 
   try {
-    await commandToExecute.execute(
-      originalMessage,
-      dialogIndex,
-      peribot,
-      ...args
-    );
+    await commandToExecute.execute(originalMessage, ...args);
   } catch (error) {
     logger.error(`Error while running command $${command}:`, error);
   }
