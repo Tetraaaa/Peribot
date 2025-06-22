@@ -135,4 +135,5 @@ export async function postRandomSouvenir() {
       ],
     files: [messagePicked.attachments.at(0)!],
   });
+  Peribot.dialogIndex++;
 }
